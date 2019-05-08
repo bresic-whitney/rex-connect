@@ -1,0 +1,40 @@
+require: rubocop-rspec
+
+Metrics/LineLength:
+  Max: 120
+Style/Documentation:
+  Enabled: false
+RSpec/NamedSubject:
+  Enabled: false
+RSpec/FilePath:
+  Enabled: false
+RSpec/MessageExpectation:
+  Enabled: false
+RSpec/MultipleExpectations:
+  Max: 5
+RSpec/MessageChain:
+  Enabled: false
+RSpec/ExampleLength:
+  Max: 10
+Metrics/AbcSize:
+  Max: 25
+Metrics/MethodLength:
+  Max: 20
+RSpec/NestedGroups:
+  Max: 4
+Metrics/BlockLength:
+  ExcludedMethods: ['describe', 'context']
+Rails/DynamicFindBy:
+  Enabled: false
+
+# Rails exceptions
+AllCops:
+  Include:
+    - '**/Rakefile'
+    - '**/config.ru'
+  Exclude:
+    - 'config/**/*'
+    - 'script/**/*'
+    - 'bin/**/*'
+    - 'vendor/**/*'
+    - 'Gemfile'

@@ -1,0 +1,15 @@
+# frozen_string_literal: true
+
+require 'bw_rex/models/contacts'
+require 'bw_rex/models/custom_fields'
+require 'bw_rex/models/duplications'
+require 'bw_rex/models/published_listings'
+require 'bw_rex/models/listings'
+require 'bw_rex/models/listing_publication'
+require 'bw_rex/models/properties'
+require 'bw_rex/models/match_profiles'
+require 'bw_rex/models/notes'
+require 'bw_rex/models/system_values'
+require 'bw_rex/models/health_check'
+require 'bw_rex/models/users'
+require 'bw_rex/models/upload'
