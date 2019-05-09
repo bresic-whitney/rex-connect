@@ -19,6 +19,7 @@ RSpec.describe BwRex do
     endpoint: 'some-endpoint',
     email: 'some-email',
     password: 'some-password',
+    multi_user: false,
     sync_period_in_days: 100,
     custom_type_id: '101',
     custom_view_mode_id: '102',

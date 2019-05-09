@@ -91,5 +91,19 @@ RSpec.describe BwRex::Core::Client do
     it 'returns a new token' do
       expect(subject.new_token('not_a_login_query')).to eq('valid-token')
     end
+
+    context 'when multi-user configuration is set' do
+
+      around(:each) do |each|
+        old = BwRex.configuration.multi_user
+        BwRex.configuration.multi_user = true
+        each.run
+        BwRex.configuration.multi_user = old
+      end
+
+      it 'returns nil' do
+        expect(subject.new_token('not_a_login_query')).to be_nil
+      end
+    end
   end
 end

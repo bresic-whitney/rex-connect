@@ -6,6 +6,7 @@ class Configuration
                 :email,
                 :password,
                 :environment_id,
+                :multi_user,
                 :sync_period_in_days,
                 :custom_type_id,
                 :custom_view_mode_id,
@@ -18,6 +19,8 @@ class Configuration
     self.email = nil
     self.password = nil
     self.environment_id = nil
+
+    self.multi_user = false
 
     self.sync_period_in_days = nil
     self.custom_type_id = nil

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rex_connect (0.0.1)
+    rex-connect (0.0.1)
       hashie (~> 3.5.7)
       httparty (~> 0.16.2)
 
@@ -112,7 +112,7 @@ DEPENDENCIES
   fuubar
   rails_best_practices
   rake (~> 10.0)
-  rex_connect!
+  rex-connect!
   rspec (~> 3.0)
   rubocop
   rubocop-performance

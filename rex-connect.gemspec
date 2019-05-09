@@ -1,14 +1,13 @@
-
 # frozen_string_literal: true
 
 lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
-require 'bw_rex'
+require File.expand_path("../lib/bw_rex/version", __FILE__)
 
 Gem::Specification.new do |spec|
-  spec.name          = 'rex_connect'
-  spec.version       = BwRex::VERSION
+  spec.name          = 'rex-connect'
+  spec.version       =  BwRex::VERSION.dup
   spec.authors       = ['bresic whitney']
 
   spec.summary       = 'Bresic Whitney REX integration gem'

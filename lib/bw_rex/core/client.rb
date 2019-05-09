@@ -23,10 +23,8 @@ module BwRex
 
     class Client
       def initialize
-        raise 'Configuration not set' unless BwRex.configuration
         @config = BwRex.configuration
-        h = { email: @config.email, password: @config.password, environment_id: @config.environment_id }
-        @authenticator = Authentication.new(h)
+        raise 'Configuration not set' unless @config
       end
 
       def post(query)
@@ -38,8 +36,8 @@ module BwRex
       end
 
       def new_token(query = nil)
-        return if query == @authenticator.query(:login)
-        @authenticator.login.tap { |token| BwRex.token = token }
+        return if @config.multi_user || query == authenticator.query(:login)
+        authenticator.login.tap { |token| BwRex.token = token }
       end
 
       private
@@ -51,6 +49,14 @@ module BwRex
 
         raise ServerError, output['error'] if output['error']
         output['result']
+      end
+
+      def authenticator
+        @authenticator ||= Authentication.new(default_credentials)
+      end
+
+      def default_credentials
+        { email: @config.email, password: @config.password, environment_id: @config.environment_id }
       end
     end
   end
