@@ -27,8 +27,10 @@ RSpec.describe BwRex::Core::Model do
 
     let(:response) { { result: 'positive', error: nil } }
 
+    let(:token) { 'valid-token' }
+
     before do
-      BwRex.token = 'valid-token'
+      BwRex.token = token
       stub_request(:post, BwRex.configuration.endpoint)
         .with(body: JSON.generate(request.merge(token: 'valid-token')))
         .to_return(status: 200, body: JSON.generate(response))
@@ -56,6 +58,25 @@ RSpec.describe BwRex::Core::Model do
 
       it 'fails with error where request fails' do
         expect { subject.failure }.to raise_error(BwRex::Core::ServerError)
+      end
+    end
+
+    context 'with token set locally via constructor' do
+      subject { RSpec::Model::Dummy.new(token: 'valid-token') }
+
+      let(:token) { nil }
+
+      it 'accepts the raw query end return the raw response' do
+        expect(subject.request(request)).to eq('positive')
+      end
+    end
+
+    context 'with token set locally via accessor' do
+      let(:token) { nil }
+
+      it 'accepts the raw query end return the raw response' do
+        subject.token = 'valid-token'
+        expect(subject.request(request)).to eq('positive')
       end
     end
   end

@@ -8,21 +8,19 @@ git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 gemspec
 
 group :development, :test do
-  gem 'dotenv'
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
-  gem 'activesupport'
+  gem 'dotenv'
   gem 'fuubar'
 end
 
 group :development do
   gem 'rubocop', require: false
-  gem 'rubocop-rspec'
-  gem 'rubocop-performance'
-  gem 'rails_best_practices', require: false
+  gem 'rubocop-performance', require: false
+  gem 'rubocop-rspec', require: false
 end
 
 group :test do
-  gem 'webmock'
   gem 'simplecov', require: false
   gem 'simplecov-rcov', require: false
+  gem 'webmock'
 end

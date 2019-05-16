@@ -19,7 +19,7 @@ module BwRex
     private
 
     def prepare
-      self.contact_id = Contacts.search_ids_by_email(email: contact_email).sort.first
+      self.contact_id = Contacts.search_ids_by_email(email: contact_email).min
       self.listing_categories = property_type ? [{ 'value' => listing_category }] : []
       self.campaigns = frequency_valid? ? [campaign] : []
       self.suburbs = suburbs ? suburbs.map { |name| SystemValues.suburb(name) } : []

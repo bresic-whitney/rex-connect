@@ -70,6 +70,7 @@ module BwRex
 
           def instance_value
             return range_value if options[:range] == true
+
             @instance.public_send(@attribute)
           end
 

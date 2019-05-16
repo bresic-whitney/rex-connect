@@ -6,14 +6,15 @@ module BwRex
       class BaseProxy
         include Core::DSL::Utils
 
-        attr_reader :action_name, :model_name, :attributes, :fields
+        attr_reader :name, :action_name, :model_name, :attributes, :fields
 
         def initialize(name, options = {})
           @options = options
+          @name = name
           @action_name = options[:as] || name
+          @model_name = @options[:model]
           @attributes = []
           @fields = Hash.new { |h, k| h[k] = [] }
-          @model_name = @options[:model]
 
           raise "Model name required for action '#{name}'" unless @model_name
         end

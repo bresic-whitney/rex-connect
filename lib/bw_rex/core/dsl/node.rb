@@ -6,7 +6,8 @@ module BwRex
       class Node
         attr_reader :fields
 
-        def initialize(*)
+        def initialize(options = {})
+          @options = options
           @fields = {}
         end
 

@@ -18,8 +18,8 @@ Dotenv.load('.env')
 require 'logger'
 require 'webmock/rspec'
 require 'bundler/setup'
-require 'active_support/core_ext/hash/indifferent_access'
-require 'active_support/core_ext/time'
+# require 'active_support/core_ext/hash/indifferent_access'
+# require 'active_support/core_ext/time'
 require 'bw_rex'
 
 BwLogger = Logger.new(STDOUT)
@@ -39,7 +39,7 @@ BwRex.configure do |configuration|
   configuration.custom_admin_email_id = '12842'
 end
 
-Dir[File.dirname(__FILE__) + "/support/**/*.rb"].each {|f| require f }
+Dir[File.dirname(__FILE__) + '/support/**/*.rb'].each { |f| require f }
 
 RSpec.configure do |config|
   config.include WebMock::API

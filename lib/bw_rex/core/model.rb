@@ -5,18 +5,29 @@ module BwRex
     module Model
       extend Core::DSL::Utils
 
+      module ModelInstanceMethods
+        def initialize(hash = nil)
+          self.token = hash[:token] if hash.is_a?(Hash) && hash.key?(:token)
+          super
+        end
+      end
+
       def self.included(base)
         base.extend(DSL::ClassMethods)
         base.include(DSL::InstanceMethods)
+        base.include(ModelInstanceMethods)
       end
+
+      attr_accessor :token
 
       def request(query)
         response = nil
         start_time = Time.now.utc
 
+        log(:debug, 'Sending REX request', request: query.dup, uri: BwRex.configuration.endpoint)
+
         begin
-          log(:debug, 'Sending REX request', request: query.dup, uri: BwRex.configuration.endpoint)
-          response = Client.new.post(query)
+          response = Client.new.post(query, token || BwRex.token)
           log(:debug, 'Received REX response', response: response)
         rescue StandardError => e
           log(:error, 'Received error from REX', error: e.message)

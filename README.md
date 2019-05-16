@@ -111,12 +111,25 @@ In the Rails app, add to the file config/inizializers/bw_rex.rb
 BwRex.configure do |config|
   config.logger = Rails.logger
   config.endpoint = ENV['REX_ENDPOINT']
+  config.environment_id = ENV['REX_ENVIRONMENT_ID']
   config.email = ENV['REX_USERNAME']
   config.password = ENV['REX_PASSWORD']
+  config.multi_user = false
   config.sync_period_in_days = ENV['REX_SYNC_PERIOD_DAYS'].to_i
   config.custom_type_id = ENV['REX_CUSTOM_LISTING_TYPE_ID']
   config.custom_view_mode_id = ENV['REX_CUSTOM_VIEW_MODE_ID']
   config.custom_admin_email_id = ENV['REX_CUSTOM_ADMIN_EMAIL_ID']
+end
+```
+
+Alternative configuration for multi user environment is
+
+```ruby
+BwRex.configure do |config|
+  config.logger = Rails.logger
+  config.endpoint = ENV['REX_ENDPOINT']
+  config.environment_id = ENV['REX_ENVIRONMENT_ID']
+  config.multi_user = true
 end
 ```
 
@@ -276,6 +289,7 @@ module BwRex
   end
 end
 ```
+
 Available options are:
 * as: Fields can also have alias
 * presence: if true and the value generated runtime is nil or empty, an error will be thrown
@@ -284,3 +298,36 @@ Available options are:
 * range: it will expect the value to be and array of two elements [min, max]. It also adds two more accessors (e.g `age_min`, `age_max`)  
 
 It is possible to group fields in two specific nodes: `related` and `extra_options`.
+
+### Rendering (map)
+
+By default the action returns the plain json resulted from the rex server.
+It is possible to transform the result with a local block.
+
+```Ruby
+
+BwRex::AccountUsers.read(id: '1') do |json|
+  { id: json['_id'], name: json['full_name'] }
+end
+
+# => { id: '1', name: 'Jason Smith' }
+```
+
+In case of array the block will be reused.
+
+It is also available the mixin `map`
+
+```Ruby
+module BwRex
+  class AccountUsers
+    include BwRex::Core::Model
+
+    map do
+      field :id, as: '_id'
+      field :name, as: 'details.full_name' # nested
+      field :pictures, as: 'pictures.url' # array of string
+      field :documents, as: 'documents', use: BwRex::Documents # array of Models
+    end
+  end
+end
+```

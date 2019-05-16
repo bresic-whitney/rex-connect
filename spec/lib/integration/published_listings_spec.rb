@@ -6,7 +6,7 @@ RSpec.describe BwRex::PublishedListings, type: :feature do
   describe '#etags' do
     subject { described_class.etags }
 
-    let(:current_time) { Time.current }
+    let(:current_time) { Time.now }
 
     let(:timestamps) do
       subject.map { |value| value['etag'].split('-').last }
@@ -130,8 +130,8 @@ RSpec.describe BwRex::PublishedListings, type: :feature do
 
       it 'matches custom fields' do
         custom_fields = %i[custom_type_id custom_view_mode_id custom_admin_email_id].map do |f|
-                          BwRex.configuration.send(f)
-                        end
+          BwRex.configuration.send(f)
+        end
         expect(listing.dig('custom_fields', 'listings').keys).to match_array(custom_fields)
       end
 

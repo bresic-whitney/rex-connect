@@ -27,27 +27,27 @@ module BwRex
         raise 'Configuration not set' unless @config
       end
 
-      def post(query)
-        new_token(query) unless BwRex.token
-        request(query)
+      def post(query, token = BwRex.token)
+        request query, token || new_token(query)
       rescue TokenError
-        new_token(query)
-        post(query)
+        request query, new_token(query)
       end
 
       def new_token(query = nil)
         return if @config.multi_user || query == authenticator.query(:login)
+
         authenticator.login.tap { |token| BwRex.token = token }
       end
 
       private
 
-      def request(body)
-        body = body.merge(token: BwRex.token).to_json
+      def request(query, token)
+        body = query.merge(token: token).to_json
         response = HTTParty.post(@config.endpoint, body: body).body
         output = JSON.parse(response)
 
         raise ServerError, output['error'] if output['error']
+
         output['result']
       end
 

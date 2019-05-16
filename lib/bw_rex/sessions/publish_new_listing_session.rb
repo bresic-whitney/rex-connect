@@ -47,6 +47,7 @@ module BwRex
 
     def set_custom_fields
       return if custom_fields_map.values.compact.empty?
+
       BwRex::CustomFields.set(id: listing_id, value_map: custom_fields_map)
     end
 

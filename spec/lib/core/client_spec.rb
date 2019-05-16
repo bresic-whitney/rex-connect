@@ -21,8 +21,10 @@ RSpec.describe BwRex::Core::Client do
 
     let(:alt_response) { { result: 'positive', error: nil } }
 
+    let(:token) { 'valid-token' }
+
     before do
-      BwRex.token = 'valid-token'
+      BwRex.token = token
       regular_resp = { status: 200, body: JSON.generate(response) }
       alternative_resp = { status: 200, body: JSON.generate(alt_response) }
       stub_request(:post, BwRex.configuration.endpoint)
@@ -40,9 +42,18 @@ RSpec.describe BwRex::Core::Client do
       end
     end
 
+    context 'when locally set token is valid' do
+      let(:token) { nil }
+
+      it 'returns the appropriate result' do
+        expect(subject.post(request, 'valid-token')).to eq('positive')
+      end
+    end
+
     context 'when token is nil' do
+      let(:token) { nil }
+
       before do
-        BwRex.token = nil
         mock_authenticator
       end
 
@@ -93,8 +104,7 @@ RSpec.describe BwRex::Core::Client do
     end
 
     context 'when multi-user configuration is set' do
-
-      around(:each) do |each|
+      around do |each|
         old = BwRex.configuration.multi_user
         BwRex.configuration.multi_user = true
         each.run

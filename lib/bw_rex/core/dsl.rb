@@ -1,8 +1,9 @@
-# frozen_string_literal: tru
+# frozen_string_literal: true
 
 require 'set'
 require 'bw_rex/core/dsl/utils'
 require 'bw_rex/core/dsl/node'
+require 'bw_rex/core/dsl/presenter'
 require 'bw_rex/core/dsl/base_proxy'
 require 'bw_rex/core/dsl/search_proxy'
 require 'bw_rex/core/dsl/find_proxy'
@@ -51,11 +52,13 @@ module BwRex
         def self.extended(base)
           base.instance_variable_set('@attributes', Set.new)
           base.instance_variable_set('@name', base.name.split('::').last)
+          base.instance_variable_set('@presenter', Presenter.new(base))
           base.instance_variable_set('@actions', {})
 
           base.send(:define_method, :query) do |name|
             actions = self.class.instance_variable_get('@actions')
             raise "Action '#{name}' not configured." unless actions[name.to_sym]
+
             actions[name.to_sym].query(self)
           end
 
@@ -78,14 +81,27 @@ module BwRex
           @actions[name] = action
 
           merge_attributes(action.attributes)
-          define_singleton_method(name) { |attr = {}| new(attr).send(name) }
-          define_method(name) { self.class.execute(action, self) }
+          define_singleton_method(name) { |attr = {}, &transformer| new(attr).send(name, &transformer) }
+          define_method(name) { |&transformer| self.class.execute(action, self, &transformer) }
         end
 
-        def execute(action, instance)
+        def map(options = {}, &block)
+          @presenter.options = options
+          @presenter.instance_eval(&block) if block_given?
+          merge_attributes(@presenter.attributes)
+        end
+
+        def execute(action, instance, &transformer)
           query = action.query(instance)
           response = instance.request(query)
-          action.respond(response)
+          output = action.respond(response)
+
+          render(output, &transformer)
+        end
+
+        def render(response, &transformer)
+          block = transformer || @presenter.method(:render)
+          response.is_a?(Array) ? response.map(&block) : block.call(response)
         end
 
         private

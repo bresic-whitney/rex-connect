@@ -6,6 +6,10 @@ RSpec.describe BwRex do
     expect(described_class.token).to be 'some-token'
   end
 
+  it 'has a version number' do
+    expect(described_class.version).not_to be nil
+  end
+
   describe '.welcome' do
     it 'prints a welcome message' do
       allow(BwRex::HealthCheck).to receive(:verify).and_return(true)

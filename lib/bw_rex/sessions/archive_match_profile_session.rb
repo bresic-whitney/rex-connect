@@ -21,7 +21,7 @@ module BwRex
     end
 
     def new_profile_name
-      "Archived '#{current['profile_name']}' [#{Time.current.strftime('%d/%m/%Y')}]"
+      "Archived '#{current['profile_name']}' [#{Time.now.strftime('%d/%m/%Y')}]"
     end
   end
 end

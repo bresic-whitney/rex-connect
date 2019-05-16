@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
 module RexIntegrationHelper
-  LISTINGS_FIELDS = YAML.safe_load(File.read(File.join(File.dirname(__FILE__), '../fixtures/listing_fields.yml'))).freeze
-  PROFILES = YAML.safe_load(File.read(File.join(File.dirname(__FILE__), '../fixtures/profiles.yml'))).freeze
+  LISTINGS_FIELDS_CONF = File.join(File.dirname(__FILE__), '../fixtures/listing_fields.yml').freeze
+  LISTINGS_FIELDS = YAML.safe_load(File.read(LISTINGS_FIELDS_CONF)).freeze
+
+  PROFILE_CONF = File.join(File.dirname(__FILE__), '../fixtures/profiles.yml').freeze
+  PROFILES = YAML.safe_load(File.read(PROFILE_CONF)).freeze
+
   PHOTO = 'https://res.cloudinary.com/hlha8aud5/image/upload/c_fill,h_1558,w_2336/c_limit,dpr_auto,f_auto,w_auto/v1551395729/bw_photo_1_2116029.jpg'
   FLOORPLAN = 'https://res.cloudinary.com/hlha8aud5/image/upload/c_pad,h_1558,w_2336/c_limit,dpr_1.0,f_auto,w_1168/v1551416363/bw_floorplan_1_7210835.jpg'
   SUBURBS = %w[ALEXANDRIA ANNANDALE BARANGAROO HAYMARKET SYDNEY ULTIMO].freeze

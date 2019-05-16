@@ -26,7 +26,7 @@ RSpec.describe BwRex::ArchiveMatchProfileSession, type: :feature do
 
         match_profile = BwRex::MatchProfiles.new(id: id).read
         expect(match_profile['category']).to eq('residential_sale')
-        expect(match_profile['profile_name']).to eq("Archived 'BW website' [#{Time.current.strftime('%d/%m/%Y')}]")
+        expect(match_profile['profile_name']).to eq("Archived 'BW website' [#{Time.now.strftime('%d/%m/%Y')}]")
         expect(match_profile['_related']['campaigns']).to be_empty
       end
     end

@@ -8,7 +8,7 @@ RSpec.describe BwRex::ArchiveMatchProfileSession do
       described_class.new.tap { |me| me.contact_email = 'test@email.com' }
     end
 
-    let(:now) { Time.current }
+    let(:now) { Time.now }
 
     let(:contact) { BwRex::Contacts.new }
 

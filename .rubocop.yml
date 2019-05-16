@@ -26,15 +26,5 @@ Metrics/BlockLength:
   ExcludedMethods: ['describe', 'context']
 Rails/DynamicFindBy:
   Enabled: false
-
-# Rails exceptions
-AllCops:
-  Include:
-    - '**/Rakefile'
-    - '**/config.ru'
-  Exclude:
-    - 'config/**/*'
-    - 'script/**/*'
-    - 'bin/**/*'
-    - 'vendor/**/*'
-    - 'Gemfile'
+Rails/TimeZone:
+  Enabled: false

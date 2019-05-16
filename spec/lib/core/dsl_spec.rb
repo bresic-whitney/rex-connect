@@ -22,6 +22,17 @@ module RSpec
         field :id
       end
     end
+
+    class DummyMap
+      include BwRex::Core::Model
+
+      action :check
+
+      map do
+        field :name, as: 'full_name'
+        field :email, as: 'contacts.email'
+      end
+    end
   end
 end
 
@@ -42,7 +53,7 @@ RSpec.describe BwRex::Core::DSL do
     end
 
     describe '#attributes' do
-      it 'gets configured attribute names' do
+      it 'gets configured attribute names including range fields' do
         expect(subject.attribute_names).to eq(%i[id range range_min range_max])
       end
 
@@ -65,10 +76,11 @@ RSpec.describe BwRex::Core::DSL do
 
     describe '.action' do
       let(:dummy) { subject.new }
+      let(:output) { 'result' }
 
       before do
         allow(RSpec::DSL::Dummy).to receive(:new).and_return(dummy)
-        allow(dummy).to receive(:request).and_return('result')
+        allow(dummy).to receive(:request).and_return(output)
       end
 
       it 'executes the appropriate action' do
@@ -77,6 +89,55 @@ RSpec.describe BwRex::Core::DSL do
 
       it 'works also as class method' do
         expect(subject.check).to eq('result')
+      end
+
+      context 'when a block is applied' do
+        it 'transforms the result' do
+          expect(subject.new.check { |i| "*** #{i} ***" }).to eq('*** result ***')
+        end
+
+        it 'works also as class method' do
+          expect(subject.check { |i| "*** #{i} ***" }).to eq('*** result ***')
+        end
+      end
+
+      context 'when a complex object is returned' do
+        let(:output) { [{ '_id' => '100' }, { '_id' => '200' }] }
+
+        it 'transforms the result' do
+          expect(subject.new.check { |h| h['_id'] }).to eq(%w[100 200])
+        end
+
+        it 'works also as class method' do
+          expect(subject.check { |h| h['_id'] }).to eq(%w[100 200])
+        end
+      end
+    end
+
+    describe '.map' do
+      subject { RSpec::DSL::DummyMap }
+
+      let(:dummy) { subject.new }
+
+      let(:output) do
+        [{ 'full_name' => 'Name', 'contacts' => { 'email' => 'test@example.com' } }]
+      end
+
+      before do
+        allow(RSpec::DSL::DummyMap).to receive(:new).and_return(dummy)
+        allow(dummy).to receive(:request).and_return(output)
+      end
+
+      it 'gets configured attribute names including presenter fields' do
+        expect(dummy.attribute_names).to eq(%i[name email])
+      end
+
+      it 'transform the output using the map' do
+        result = subject.check
+
+        expect(result.size).to eq(1)
+        expect(result.first.name).to eq('Name')
+        expect(result.first.email).to eq('test@example.com')
       end
     end
 

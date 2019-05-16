@@ -11,6 +11,8 @@ module BwRex
         field :environment_id, as: :account_id, presence: true
         field :application, value: 'rex'
       end
+
+      action :logout
     end
   end
 end

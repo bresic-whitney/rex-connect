@@ -3,9 +3,9 @@
 require 'spec_helper'
 
 RSpec.describe BwRex::Core::Authentication do
-  describe '#login' do
-    subject { described_class.new(email: 'some@email.com', password: 'some-password', environment_id: 400) }
+  subject { described_class.new(email: 'some@email.com', password: 'some-password', environment_id: 400) }
 
+  describe '#login' do
     let(:query) do
       {
         method: 'Authentication::login',
@@ -20,6 +20,19 @@ RSpec.describe BwRex::Core::Authentication do
 
     it 'produces the appropriate query' do
       expect(subject.query(:login)).to eq(query)
+    end
+  end
+
+  describe '#logout' do
+    let(:query) do
+      {
+        method: 'Authentication::logout',
+        args: {}
+      }
+    end
+
+    it 'produces the appropriate query' do
+      expect(subject.query(:logout)).to eq(query)
     end
   end
 end
