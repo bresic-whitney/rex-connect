@@ -89,7 +89,7 @@ rubocop -a
 
 Create a new git tag with new version when consumer needs new version of this gem to reference in external gemfile
 
-Use format 'v0.0.1' as a guide
+Use format '0.0.1' as a guide
 
 ```
 $ git tag <your version eg. 0.0.1>
@@ -331,3 +331,7 @@ module BwRex
   end
 end
 ```
+
+Available options are:
+* as: Fields can also have alias
+* use: Class of the model to use to parse the partial
