@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# TODO: Add specs for id
+# TODO: Add specs for options :match, :proc
+
 module RSpec
   module DSL
     module Presenter
@@ -7,7 +10,6 @@ module RSpec
         include BwRex::Core::Model
 
         map do
-          field :id, as: '_id'
           field :name, as: 'full_name'
           field :email, as: 'contacts.email'
         end
@@ -92,6 +94,27 @@ RSpec.describe BwRex::Core::DSL::Presenter do
         allow(host).to receive(:new).and_return(instance)
       end
 
+      context 'with id' do
+        before do
+          subject.field(:name)
+          allow(instance).to receive(:name=).with('Danny')
+        end
+
+        it 'renders the id field as public' do
+          response = { 'id' => '1', 'name' => 'Danny' }
+
+          expect(subject.render(response)).to eq(instance)
+          expect(instance).to have_received(:id=).with('1')
+        end
+
+        it 'renders the id field as private' do
+          response = { '_id' => '1', 'name' => 'Danny' }
+
+          expect(subject.render(response)).to eq(instance)
+          expect(instance).to have_received(:id=).with('1')
+        end
+      end
+
       it 'renders a simple attribute without alias' do
         response = { 'name' => 'Danny' }
         subject.field(:name)
@@ -106,6 +129,31 @@ RSpec.describe BwRex::Core::DSL::Presenter do
 
         expect(subject.render(response)).to eq(instance)
         expect(instance).to have_received(:name=).with('Danny')
+      end
+
+      it 'ignores other attributes' do
+        response = { 'full_name' => 'Danny' , 'age' => 40 }
+        subject.field(:name, as: 'full_name')
+
+        expect(subject.render(response)).to eq(instance)
+        expect(instance).to have_received(:name=).with('Danny')
+        expect(instance).not_to have_received(:age=)
+      end
+
+      it 'ignores non existent attributes' do
+        response = { 'first_name' => 'Danny' }
+        subject.field(:name, as: 'full_name')
+
+        expect(subject.render(response)).to eq(instance)
+        expect(instance).not_to have_received(:name=)
+      end
+
+      it 'ignores attributes with null value' do
+        response = { 'full_name' => nil }
+        subject.field(:name, as: 'full_name')
+
+        expect(subject.render(response)).to eq(instance)
+        expect(instance).not_to have_received(:name=)
       end
 
       it 'renders a nested attribute' do
@@ -148,6 +196,22 @@ RSpec.describe BwRex::Core::DSL::Presenter do
 
         expect(subject.render(complex_result)).to eq(instance)
         expect(instance).to have_received(:users=).with([1, 2])
+      end
+
+      context 'with multiple fields with same name' do
+        it 'registers all the fields but only 1 attribute' do
+          subject.field(:name, as: 'full_name')
+          subject.field(:name, as: 'real_name')
+          subject.field(:name)
+
+          expect(subject.fields.size).to eq(3)
+          expect(subject.attributes.size).to eq(1)
+        end
+        [
+          { 'full_name' => 'Danny' },
+          { 'full_name' => nil },
+        ]
+
       end
     end
   end

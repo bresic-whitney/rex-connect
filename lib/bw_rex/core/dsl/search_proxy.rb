@@ -25,11 +25,14 @@ module BwRex
 
         def args(inst)
           super(inst).tap do |args|
-            args[:criteria] = @fields[:criteria].map do |field|
+            criterias = @fields[:criteria].map do |field|
               unpack(field, inst) do |name, value, options|
                 { name: name.to_s, type: options[:type] || '=', value: value }
               end
             end
+            criterias.compact!
+
+            args[:criteria] = criterias unless criterias.empty?
             args[:order_by] = @order_by unless @order_by.empty?
           end
         end

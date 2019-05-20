@@ -337,3 +337,5 @@ Available options are:
 * use: Class of the model to use to parse the partial
 
 ## TODO
+
+Implement performance test

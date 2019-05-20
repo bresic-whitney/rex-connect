@@ -7,7 +7,11 @@ module BwRex
 
       module ModelInstanceMethods
         def initialize(hash = nil)
-          self.token = hash[:token] if hash.is_a?(Hash) && hash.key?(:token)
+          if hash.is_a?(Hash)
+            self.token = hash[:token] if hash.key?(:token)
+            self.id = hash[:id] if hash.key?(:id)
+          end
+
           super
         end
       end
@@ -18,7 +22,7 @@ module BwRex
         base.include(ModelInstanceMethods)
       end
 
-      attr_accessor :token
+      attr_accessor :token, :id
 
       def request(query)
         response = nil
@@ -28,7 +32,7 @@ module BwRex
 
         begin
           response = Client.new.post(query, token || BwRex.token)
-          log(:debug, 'Received REX response', response: response)
+          log(:debug, 'Received REX response', response: response) if ENV['DEBUG_RESPONSE'] == 'true'
         rescue StandardError => e
           log(:error, 'Received error from REX', error: e.message)
           raise e
