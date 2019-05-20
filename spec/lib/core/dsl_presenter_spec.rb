@@ -132,7 +132,7 @@ RSpec.describe BwRex::Core::DSL::Presenter do
       end
 
       it 'ignores other attributes' do
-        response = { 'full_name' => 'Danny' , 'age' => 40 }
+        response = { 'full_name' => 'Danny', 'age' => 40 }
         subject.field(:name, as: 'full_name')
 
         expect(subject.render(response)).to eq(instance)
@@ -209,9 +209,8 @@ RSpec.describe BwRex::Core::DSL::Presenter do
         end
         [
           { 'full_name' => 'Danny' },
-          { 'full_name' => nil },
+          { 'full_name' => nil }
         ]
-
       end
     end
   end

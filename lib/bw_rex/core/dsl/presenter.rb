@@ -25,6 +25,7 @@ module BwRex
 
         def render(output)
           return output if !output.is_a?(Hash) || fields.empty?
+
           puts JSON.pretty_generate(output) if options[:debug]
           output = BwRex::Core::NavigableHash[output]
 
@@ -52,9 +53,8 @@ module BwRex
 
         def validate(name, options)
           proxy = options[:use]
-          if proxy && !proxy.included_modules.include?(BwRex::Core::Model)
-            raise "The partial presenter '#{proxy}' for the field '#{name}' must include 'BwRex::Core::Model'"
-          end
+          message = "The partial presenter '#{proxy}' for the field '#{name}' must include 'BwRex::Core::Model'"
+          raise message if proxy && !proxy.included_modules.include?(BwRex::Core::Model)
         end
       end
     end

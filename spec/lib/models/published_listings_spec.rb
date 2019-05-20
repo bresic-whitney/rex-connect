@@ -45,7 +45,7 @@ RSpec.describe BwRex::PublishedListings do
         args: {
           result_format: 'website_overrides_applied',
           limit: 100,
-          criteria: [],
+          # criteria: [],
           extra_options: {
             extra_fields: [
               'images', 'floorplans', 'meta', 'features', 'events', 'advert_internet',
