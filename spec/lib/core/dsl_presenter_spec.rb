@@ -87,6 +87,15 @@ RSpec.describe BwRex::Core::DSL::Presenter do
         }
       end
 
+      let(:complex_result_stub) do
+        {
+          '_people' => [
+            { '_id' => '1', '_full_name' => 'Jason', '_contacts' => { '_email' => 'test_1@example.com' } },
+            { '_id' => '2', '_full_name' => 'Mike', '_contacts' => { '_email' => 'test_2@example.com' } }
+          ]
+        }
+      end
+
       before do
         allow(host).to receive(:new).and_return(instance)
       end
@@ -161,6 +170,14 @@ RSpec.describe BwRex::Core::DSL::Presenter do
         expect(instance).to have_received(:email=).with('test@example.com')
       end
 
+      it 'renders a stub attribute' do
+        response = { '_contacts' => { '_primary_email' => 'test@example.com' } }
+        subject.field(:email, as: 'contacts.primary_email', stub: true)
+
+        expect(subject.render(response)).to eq(instance)
+        expect(instance).to have_received(:email=).with('test@example.com')
+      end
+
       it 'renders an attribute as array of attributes' do
         response = {
           'contacts' => [
@@ -187,12 +204,28 @@ RSpec.describe BwRex::Core::DSL::Presenter do
         expect(instance).to have_received(:users=).with([{ 'id' => '1' }, { 'id' => '2' }])
       end
 
-      it 'renders an attribute using a proxy' do
-        subject.field(:users, as: 'people', use: proxy_class)
-        allow(proxy_class).to receive(:render).with(complex_result['people']).and_return([1, 2])
+      context 'with proxy' do
+        it 'renders a complex attribute' do
+          subject.field(:users, as: 'people', use: proxy_class)
 
-        expect(subject.render(complex_result)).to eq(instance)
-        expect(instance).to have_received(:users=).with([1, 2])
+          val = complex_result['people']
+          opts = { stub: false }
+          allow(proxy_class).to receive(:render).with(val, opts).and_return([1, 2])
+
+          expect(subject.render(complex_result)).to eq(instance)
+          expect(instance).to have_received(:users=).with([1, 2])
+        end
+
+        it 'renders a complex attribute with stub' do
+          subject.field(:users, as: 'people', use: proxy_class, stub: true)
+
+          val = complex_result_stub['_people']
+          opts = { stub: true }
+          allow(proxy_class).to receive(:render).with(val, opts).and_return([1, 2])
+
+          expect(subject.render(complex_result_stub)).to eq(instance)
+          expect(instance).to have_received(:users=).with([1, 2])
+        end
       end
 
       context 'with regexp' do

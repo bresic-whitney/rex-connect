@@ -109,12 +109,17 @@ module BwRex
             end
           end
 
-          render(output, &transformer)
+          render(output, {}, &transformer)
         end
 
-        def render(response, &transformer)
+        def render(response, options = {}, &transformer)
           block = transformer || @presenter.method(:render)
-          response.is_a?(Array) ? response.map(&block) : block.call(response)
+
+          if response.is_a?(Array)
+            response.map { |i| block.call(i, options) }
+          else
+            block.call(response, options)
+          end
         end
 
         private

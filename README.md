@@ -327,6 +327,9 @@ module BwRex
       field :name, as: 'details.full_name' # nested
       field :pictures, as: 'pictures.url' # array of string
       field :documents, as: 'documents', use: BwRex::Documents # array of Models
+      field :images, as: 'images' do |images, all|
+        images.map { |i| { 'url' => i['_url'] } }
+      end  
     end
   end
 end
@@ -336,6 +339,7 @@ Available options are:
 * as: Fields can also have alias
 * use: Class of the model to use to parse the partial
 * match: Regexp to extract the value
+* proc: Analyzes the key dinamically
 
 ## TODO
 
