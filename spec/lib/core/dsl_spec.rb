@@ -33,6 +33,17 @@ module RSpec
         field :email, as: 'contacts.email'
       end
     end
+
+    class DummyDebug
+      include BwRex::Core::Model
+
+      action :check, debug: true
+
+      map do
+        field :name, as: 'full_name'
+        field :email, as: 'contacts.email'
+      end
+    end
   end
 end
 
@@ -167,6 +178,37 @@ RSpec.describe BwRex::Core::DSL do
         it 'works also as class method' do
           expect(subject.query(:check, id: 100)).to eq(method: 'RexModel::rexCheck', args: { id: 100 })
         end
+      end
+    end
+
+    context 'with debug' do
+      subject { RSpec::DSL::DummyDebug }
+
+      let(:dummy) { subject.new }
+
+      let(:output) { 'result' }
+
+      let(:logged) do
+        %(=========================
+{
+  "method": "DummyDebug::check",
+  "args": {
+  }
+}
+-------------------------
+"result"
+=========================
+)
+      end
+
+      before do
+        allow(RSpec::DSL::DummyDebug).to receive(:new).and_return(dummy)
+        allow(dummy).to receive(:request).and_return(output)
+      end
+
+      it 'executes the appropriate action' do
+        allow(STDOUT).to receive(:print).with(logged)
+        subject.new.check
       end
     end
   end

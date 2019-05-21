@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-# TODO: Add specs for id
-# TODO: Add specs for options :match, :proc
-
 module RSpec
   module DSL
     module Presenter
@@ -198,6 +195,52 @@ RSpec.describe BwRex::Core::DSL::Presenter do
         expect(instance).to have_received(:users=).with([1, 2])
       end
 
+      context 'with regexp' do
+        it 'extracts a value using regexp' do
+          response = { 'code' => 'identifier.codified.1235' }
+          subject.field(:uuid, as: 'code', match: /^identifier\.codified\.(\d+)$/)
+
+          expect(subject.render(response)).to eq(instance)
+          expect(instance).to have_received(:uuid=).with('1235')
+        end
+
+        it 'returns the entire value if no match' do
+          response = { 'code' => 'identifier.not-codified.1235' }
+          subject.field(:uuid, as: 'code', match: /^identifier\.codified\.(\d+)$/)
+
+          expect(subject.render(response)).to eq(instance)
+          expect(instance).to have_received(:uuid=).with('identifier.not-codified.1235')
+        end
+      end
+
+      context 'with proc' do
+        it 'evaluates the alias dinamically' do
+          response = { 'code-1' => '1235', 'code-2' => '9874', 'code-3' => '8522' }
+          subject.field(:uuid, proc: ->(_o) { 'code-2' })
+
+          expect(subject.render(response)).to eq(instance)
+          expect(instance).to have_received(:uuid=).with('9874')
+        end
+      end
+
+      context 'with block' do
+        it 'manipulates the returning field' do
+          response = { 'code-1' => '1235', 'code-2' => '9874', 'code-3' => '8522' }
+          subject.field(:uuid, as: 'code-1') { |v| v.chars + v.chars.reverse }
+
+          expect(subject.render(response)).to eq(instance)
+          expect(instance).to have_received(:uuid=).with(%w[1 2 3 5 5 3 2 1])
+        end
+
+        it 'uses the whole object' do
+          response = { 'code-1' => '1235', 'code-2' => '9874', 'code-3' => '8522' }
+          subject.field(:uuid, as: 'code-1') { |_value, raw| raw.keys }
+
+          expect(subject.render(response)).to eq(instance)
+          expect(instance).to have_received(:uuid=).with(['code-1', 'code-2', 'code-3'])
+        end
+      end
+
       context 'with multiple fields with same name' do
         it 'registers all the fields but only 1 attribute' do
           subject.field(:name, as: 'full_name')
@@ -207,10 +250,6 @@ RSpec.describe BwRex::Core::DSL::Presenter do
           expect(subject.fields.size).to eq(3)
           expect(subject.attributes.size).to eq(1)
         end
-        [
-          { 'full_name' => 'Danny' },
-          { 'full_name' => nil }
-        ]
       end
     end
   end

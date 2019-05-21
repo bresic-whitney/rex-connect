@@ -17,8 +17,9 @@ module BwRex
           @fields = []
         end
 
-        def field(name, options = {})
+        def field(name, options = {}, &block)
           validate(name, options)
+          options[:dyna] = block
           @fields << pack(name, options)
           @attributes |= [name.to_sym]
         end
@@ -26,7 +27,7 @@ module BwRex
         def render(output)
           return output if !output.is_a?(Hash) || fields.empty?
 
-          puts JSON.pretty_generate(output) if options[:debug]
+          puts JSON.pretty_generate(output) if debug?
           output = BwRex::Core::NavigableHash[output]
 
           model = host.new
@@ -38,6 +39,10 @@ module BwRex
           end
         end
 
+        def debug?
+          @options[:debug] == true
+        end
+
         private
 
         def extract(field, output)
@@ -46,6 +51,8 @@ module BwRex
 
           value = output.dig_and_collect(*key.to_s.split('.'))
           value = options[:match] =~ value ? Regexp.last_match(1) : value
+          value = options[:dyna].call(value, output) if options[:dyna].respond_to?(:call)
+
           return unless value
 
           options[:use] ? options[:use].render(value) : value

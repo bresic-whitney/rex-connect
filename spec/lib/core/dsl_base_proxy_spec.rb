@@ -112,4 +112,18 @@ RSpec.describe BwRex::Core::DSL::BaseProxy do
       expect(subject.attributes).to eq(%i[my_field my_field_min my_field_max])
     end
   end
+
+  describe '#debug?' do
+    subject { described_class.new('my_action', options).debug? }
+
+    let(:options) { { model: 'my_model', debug: true } }
+
+    it { is_expected.to be_truthy }
+
+    context 'when not existent' do
+      let(:options) { { model: 'my_model' } }
+
+      it { is_expected.to be_falsey }
+    end
+  end
 end

@@ -75,6 +75,8 @@ module BwRex
           merge_attributes(list)
         end
 
+        # TODO: Add debug option
+
         def action(name, options = {}, &block)
           action = proxy_instance(name, self, options)
           action.instance_eval(&block) if block_given?
@@ -95,6 +97,17 @@ module BwRex
           query = action.query(instance)
           response = instance.request(query)
           output = action.respond(response)
+
+          if action.debug?
+            StringIO.new.tap do |io|
+              io.puts '========================='
+              io.puts JSON.pretty_generate(query)
+              io.puts '-------------------------'
+              io.puts JSON.pretty_generate(output)
+              io.puts '========================='
+              STDOUT.print(io.string)
+            end
+          end
 
           render(output, &transformer)
         end

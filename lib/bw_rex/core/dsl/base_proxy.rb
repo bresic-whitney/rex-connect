@@ -47,6 +47,10 @@ module BwRex
           obj
         end
 
+        def debug?
+          @options[:debug] == true
+        end
+
         protected
 
         def args(instance)
