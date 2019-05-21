@@ -217,7 +217,7 @@ RSpec.describe BwRex::Core::DSL::Presenter do
         end
 
         it 'renders a complex attribute with stub' do
-          subject.field(:users, as: 'people', use: proxy_class, stub: true)
+          subject.field(:users, as: 'people', stub: true, use: proxy_class, use_stub: true)
 
           val = complex_result_stub['_people']
           opts = { stub: true }

@@ -51,7 +51,7 @@ module BwRex
           return unless value
           return value unless field[:options][:use]
 
-          use_options = { stub: field[:options][:stub] == true }
+          use_options = { stub: field[:options][:use_stub] == true }
           field[:options][:use].render(value, use_options)
         end
 
@@ -69,7 +69,10 @@ module BwRex
           key, options = field.values_at(:name, :options)
           key = options[:proc].call(output) if options[:proc].respond_to?(:call)
           keys = key.to_s.split('.')
-          keys = keys.map { |k| "_#{k}" } if options[:stub] == true || opts[:stub] == true
+
+          stub = options[:stub] == true || opts[:stub] == true
+          keys = keys.map { |k| k[0] == '_' ? k : "_#{k}" } if stub
+
           keys
         end
 
