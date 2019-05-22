@@ -108,14 +108,14 @@ RSpec.describe BwRex::Core::Model do
         subject.log(:debug, 'Some message')
 
         expectation = { component: 'Rex', class_name: 'RSpec::Model::Dummy', msg: 'Some message' }
-        expect(logger).to have_received('debug').with(expectation)
+        expect(logger).to have_received('debug').with(expectation.to_json)
       end
 
       it 'merges other parameters' do
         subject.log(:debug, 'Msg', foo: 'test')
 
         expectation = { component: 'Rex', class_name: 'RSpec::Model::Dummy', msg: 'Msg', foo: 'test' }
-        expect(logger).to have_received('debug').with(expectation)
+        expect(logger).to have_received('debug').with(expectation.to_json)
       end
 
       context 'when query is Authentication::login' do
@@ -135,7 +135,7 @@ RSpec.describe BwRex::Core::Model do
           request = { method: 'Authentication::login', args: { email: 'very-secret', password: 'more-secret' } }
           subject.log(:debug, 'Login', request: request)
 
-          expect(logger).to have_received('debug').with(expectation)
+          expect(logger).to have_received('debug').with(expectation.to_json)
         end
       end
     end
