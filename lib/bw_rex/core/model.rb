@@ -47,7 +47,7 @@ module BwRex
         return unless BwRex.configuration.logger.send("#{level}?")
 
         args[:request][:args] = {} if args.dig(:request, :method) == 'Authentication::login'
-        payload = { component: 'Rex', class_name: self.class.name }.merge(msg: msg, **args)
+        payload = { component: 'Rex', class_name: self.class.name }.merge(msg: msg, **args).to_json
         BwRex.configuration.logger.send(level, payload)
       end
     end
