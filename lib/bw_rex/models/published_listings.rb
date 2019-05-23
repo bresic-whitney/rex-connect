@@ -22,7 +22,7 @@ module BwRex
 
     action :read do
       field :id, presence: true
-      field :extra_fields, default: []
+      field :extra_fields, default: EXTRA_FIELDS
     end
 
     action :etags, as: :search do
@@ -37,7 +37,7 @@ module BwRex
       field :result_format, value: 'website_overrides_applied'
       field :limit, default: 100
       extra_options do
-        field :extra_fields, default: []
+        field :extra_fields, default: EXTRA_FIELDS
       end
     end
 
@@ -45,23 +45,13 @@ module BwRex
       field :result_format, value: 'website_overrides_applied'
       field :limit, default: 100
       extra_options do
-        field :extra_fields, default: []
+        field :extra_fields, default: EXTRA_FIELDS
       end
       criteria :ids, as: :id, type: 'in'
     end
 
-    def extra_fields
-      @extra_fields ||= EXTRA_FIELDS + custom_fields
-    end
-
-    def custom_fields
-      %i[type view_mode admin_email].map do |par|
-        ['cf', 'listings', BwRex.configuration.send("custom_#{par}_id")].join('.')
-      end
-    end
-
     def system_modtime
-      Time.now.to_i - (BwRex.configuration.sync_period_in_days.to_i * SECONDS_PER_DAY)
+      Time.now.to_i - (7 * SECONDS_PER_DAY)
     end
   end
 end

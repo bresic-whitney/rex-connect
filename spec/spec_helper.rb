@@ -31,12 +31,6 @@ BwRex.configure do |configuration|
   configuration.environment_id = ENV['REX_ENVIRONMENT_ID']
   configuration.email = ENV['REX_USERNAME']
   configuration.password = ENV['REX_PASSWORD']
-  configuration.sync_period_in_days = 7
-
-  # TODO: remove
-  configuration.custom_type_id = '12841'
-  configuration.custom_view_mode_id = '12840'
-  configuration.custom_admin_email_id = '12842'
 end
 
 Dir[File.dirname(__FILE__) + '/support/**/*.rb'].each { |f| require f }

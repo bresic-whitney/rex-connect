@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rex-connect (0.0.6)
+    rex-connect (0.0.7)
       httparty (~> 0.16.2)
 
 GEM

@@ -9,7 +9,7 @@ RSpec.describe BwRex::PublishedListings do
     let(:current_time) { Time.now.to_i }
 
     let(:timestamp) do
-      seconds = BwRex.configuration.sync_period_in_days * 86_400
+      seconds = 7 * 86_400
       current_time.to_i - seconds
     end
 
@@ -47,10 +47,9 @@ RSpec.describe BwRex::PublishedListings do
           limit: 100,
           # criteria: [],
           extra_options: {
-            extra_fields: [
-              'images', 'floorplans', 'meta', 'features', 'events', 'advert_internet',
-              'subcategories', 'documents', 'tags', 'allowances', 'links',
-              'cf.listings.12841', 'cf.listings.12840', 'cf.listings.12842'
+            extra_fields: %w[
+              images floorplans meta features events advert_internet
+              subcategories documents tags allowances links
             ]
           }
         }
@@ -75,10 +74,9 @@ RSpec.describe BwRex::PublishedListings do
             value: [1, 2, 3]
           }],
           extra_options: {
-            extra_fields: [
-              'images', 'floorplans', 'meta', 'features', 'events', 'advert_internet',
-              'subcategories', 'documents', 'tags', 'allowances', 'links',
-              'cf.listings.12841', 'cf.listings.12840', 'cf.listings.12842'
+            extra_fields: %w[
+              images floorplans meta features events advert_internet
+              subcategories documents tags allowances links
             ]
           }
         }

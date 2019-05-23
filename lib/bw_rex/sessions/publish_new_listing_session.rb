@@ -4,12 +4,12 @@ module BwRex
   class PublishNewListingSession < BwRex::Core::BaseSession
     model Properties
 
-    attr_accessor :listing, :listing_type, :view_mode, :admin_email
+    attr_accessor :listing, :listing_type, :view_mode, :admin_email, :custom_fields_map
 
     def run
       create_property
       create_listing
-      set_custom_fields
+      set_custom_fields if custom_fields_map
       set_active_channels
       publish_listing
 
@@ -57,22 +57,6 @@ module BwRex
 
     def publish_listing
       BwRex::ListingPublication.publish(listing_id: listing_id)
-    end
-
-    def custom_fields_map
-      conf = BwRex.configuration
-
-      { conf.custom_type_id => custom_type_value,
-        conf.custom_view_mode_id => custom_view_mode_value,
-        conf.custom_admin_email_id => admin_email }
-    end
-
-    def custom_type_value
-      { on_market: 'On Market', off_market: 'Off Market' }.fetch(listing_type, nil)
-    end
-
-    def custom_view_mode_value
-      { preview: 'Preview', live: 'Live' }.fetch(view_mode, nil)
     end
   end
 end

@@ -115,10 +115,6 @@ BwRex.configure do |config|
   config.email = ENV['REX_USERNAME']
   config.password = ENV['REX_PASSWORD']
   config.multi_user = false
-  config.sync_period_in_days = ENV['REX_SYNC_PERIOD_DAYS'].to_i
-  config.custom_type_id = ENV['REX_CUSTOM_LISTING_TYPE_ID']
-  config.custom_view_mode_id = ENV['REX_CUSTOM_VIEW_MODE_ID']
-  config.custom_admin_email_id = ENV['REX_CUSTOM_ADMIN_EMAIL_ID']
 end
 ```
 
@@ -294,7 +290,7 @@ Available options are:
 * as: Fields can also have alias
 * presence: if true and the value generated runtime is nil or empty, an error will be thrown
 * value: static value
-* default: static value if the value generated runtime is nil or empty
+* default: static value (or lambda) to be used if the value generated runtime is nil or empty
 * range: it will expect the value to be and array of two elements [min, max]. It also adds two more accessors (e.g `age_min`, `age_max`)  
 
 It is possible to group fields in two specific nodes: `related` and `extra_options`.
@@ -337,9 +333,12 @@ end
 
 Available options are:
 * as: Fields can also have alias
+* stub: Looks up for stubbed values (prefixed with underscore)
 * use: Class of the model to use to parse the partial
+* use_stub: Instruct the class to look up for stubbed values
 * match: Regexp to extract the value
 * proc: Analyzes the key dinamically
+
 
 ## TODO
 

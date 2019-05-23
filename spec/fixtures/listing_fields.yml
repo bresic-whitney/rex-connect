@@ -13,7 +13,6 @@ base:
   - available_from_date
   - business_name
   - contract
-  - custom_fields
   - default_external_id
   - documents
   - ebrochure_custom_link

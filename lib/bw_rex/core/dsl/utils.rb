@@ -47,7 +47,7 @@ module BwRex
           end
 
           def generate
-            @value = options[:value] || instance_value || options[:default]
+            @value = options[:value] || instance_value || default_value
           end
 
           def validate
@@ -72,6 +72,11 @@ module BwRex
             return range_value if options[:range] == true
 
             @instance.public_send(@attribute)
+          end
+
+          def default_value
+            dyna = options[:default]
+            dyna.respond_to?(:call) ? dyna.call : dyna
           end
 
           def range_value

@@ -6,11 +6,7 @@ class Configuration
                 :email,
                 :password,
                 :environment_id,
-                :multi_user,
-                :sync_period_in_days,
-                :custom_type_id,
-                :custom_view_mode_id,
-                :custom_admin_email_id
+                :multi_user
 
   def initialize
     self.logger = nil
@@ -21,10 +17,5 @@ class Configuration
     self.environment_id = nil
 
     self.multi_user = false
-
-    self.sync_period_in_days = nil
-    self.custom_type_id = nil
-    self.custom_view_mode_id = nil
-    self.custom_admin_email_id = nil
   end
 end

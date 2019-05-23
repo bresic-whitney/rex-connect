@@ -79,6 +79,16 @@ RSpec.describe BwRex::Core::DSL::Utils do
         expect(options).to eq(default: 'Some Street')
       end
     end
+
+    it 'generates default values from labdas' do
+      field = subject.pack(:address, default: -> { 'Some Street' })
+
+      subject.unpack(field, instance) do |name, value, options|
+        expect(name).to eq(:address)
+        expect(value).to eq('Some Street')
+        expect(options[:default]).not_to be_nil
+      end
+    end
   end
 
   describe '.merge_lists' do

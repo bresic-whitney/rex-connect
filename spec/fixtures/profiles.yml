@@ -2,22 +2,3 @@ bw_residential:
   listing_category: residential_sale
 bw_residential_no_fields:
   listing_category: residential_sale
-bw_residential_on_market:
-  listing_category: residential_sale
-  listing_type: on_market
-bw_residential_off_market:
-  listing_category: residential_sale
-  listing_type: off_market
-bw_residential_preview:
-  listing_category: residential_sale
-  listing_type: off_market
-  view_mode: preview
-  admin_email: 'integration@test.com'
-bw_residential_off_market_preview:
-  listing_category: residential_sale
-  view_mode: preview
-  admin_email: 'integration@test.com'
-bw_residential_live:
-  listing_category: residential_sale
-  view_mode: live
-  admin_email: 'integration@test.com'

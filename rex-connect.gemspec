@@ -8,9 +8,9 @@ require File.expand_path('lib/bw_rex/version', __dir__)
 Gem::Specification.new do |spec|
   spec.name = 'rex-connect'
   spec.version = BwRex::VERSION.dup
-  spec.authors       = ['bresic whitney']
+  spec.authors       = ['Danilo Lo Santo']
 
-  spec.summary       = 'Bresic Whitney REX integration gem'
+  spec.summary       = 'REX integration gem'
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|
     f.match(%r{^(test|spec|features)/})

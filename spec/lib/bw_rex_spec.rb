@@ -23,11 +23,7 @@ RSpec.describe BwRex do
     endpoint: 'some-endpoint',
     email: 'some-email',
     password: 'some-password',
-    multi_user: false,
-    sync_period_in_days: 100,
-    custom_type_id: '101',
-    custom_view_mode_id: '102',
-    custom_admin_email_id: '103'
+    multi_user: false
   }.keys.each do |key|
     it { described_class.configuration.respond_to? key }
   end

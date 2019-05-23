@@ -7,18 +7,15 @@ RSpec.describe BwRex::PublishNewListingSession do
     subject do
       described_class.new(property_data).tap do |subject|
         subject.listing = listing
-        subject.listing_type = :off_market
-        subject.view_mode = :preview
-        subject.admin_email = 'admin@email.com'
       end
     end
 
     let(:listing) { BwRex::Listings.new(listing_category: 'residential_sale') }
 
     let(:custom_fields_map) do
-      { BwRex.configuration.custom_type_id => 'Off Market',
-        BwRex.configuration.custom_view_mode_id => 'Preview',
-        BwRex.configuration.custom_admin_email_id => 'admin@email.com' }
+      { '100' => 'Off Market',
+        '101' => 'Preview',
+        '102' => 'admin@email.com' }
     end
 
     let(:property_data) do
