@@ -52,7 +52,7 @@ module BwRex
         def self.extended(base)
           base.instance_variable_set('@attributes', Set.new)
           base.instance_variable_set('@name', base.name.split('::').last)
-          base.instance_variable_set('@presenter', Presenter.new(base))
+          base.instance_variable_set('@presenters', default: Presenter.new(base))
           base.instance_variable_set('@actions', {})
 
           base.send(:define_method, :query) do |name|
@@ -75,8 +75,6 @@ module BwRex
           merge_attributes(list)
         end
 
-        # TODO: Add debug option
-
         def action(name, options = {}, &block)
           action = proxy_instance(name, self, options)
           action.instance_eval(&block) if block_given?
@@ -88,9 +86,12 @@ module BwRex
         end
 
         def map(options = {}, &block)
-          @presenter.options = options
-          @presenter.instance_eval(&block) if block_given?
-          merge_attributes(@presenter.attributes)
+          profile = options[:profile] || :default
+
+          @presenters[profile] ||= Presenter.new(self, options)
+          @presenters[profile].instance_eval(&block) if block_given?
+
+          merge_attributes(@presenters[profile].attributes)
         end
 
         def execute(action, instance, &transformer)
@@ -109,11 +110,13 @@ module BwRex
             end
           end
 
-          render(output, {}, &transformer)
+          options = { profile: instance.profile }
+          render(output, options, &transformer)
         end
 
         def render(response, options = {}, &transformer)
-          block = transformer || @presenter.method(:render)
+          profile = options[:profile] || :default
+          block = transformer || @presenters[profile].method(:render)
 
           if response.is_a?(Array)
             response.map { |i| block.call(i, options) }

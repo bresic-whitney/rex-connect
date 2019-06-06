@@ -1,0 +1,13 @@
+users:
+  default:
+    first_name: 'first_name'
+    last_name: 'last_name'
+    email: 'email'
+    mobile: 'settings.phone_mobile'
+    image: 'settings.profile_image._url'
+  alternative:
+    first_name: 'name_first'
+    last_name: 'name_last'
+    email: 'primary_email'
+    mobile: 'primary_phone'
+    image: 'image_url'

@@ -7,6 +7,7 @@ RSpec.describe BwRex::PublishNewListingSession do
     subject do
       described_class.new(property_data).tap do |subject|
         subject.listing = listing
+        subject.custom_fields_map = custom_fields_map
       end
     end
 

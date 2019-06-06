@@ -7,7 +7,7 @@ module BwRex
     class ServerError < StandardError
       attr_accessor :type, :code, :query
 
-      def initialize(rex_error)
+      def initialize(rex_error = {})
         super(rex_error['message'])
         self.type = rex_error['type']
         self.code = rex_error['code']

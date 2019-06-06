@@ -18,8 +18,6 @@ Dotenv.load('.env')
 require 'logger'
 require 'webmock/rspec'
 require 'bundler/setup'
-# require 'active_support/core_ext/hash/indifferent_access'
-# require 'active_support/core_ext/time'
 require 'bw_rex'
 
 BwLogger = Logger.new(STDOUT)
@@ -31,6 +29,9 @@ BwRex.configure do |configuration|
   configuration.environment_id = ENV['REX_ENVIRONMENT_ID']
   configuration.email = ENV['REX_USERNAME']
   configuration.password = ENV['REX_PASSWORD']
+
+  path = "#{File.dirname(__FILE__)}/fixtures/models.yml"
+  configuration.profiles = YAML.load_file(path)
 end
 
 Dir[File.dirname(__FILE__) + '/support/**/*.rb'].each { |f| require f }

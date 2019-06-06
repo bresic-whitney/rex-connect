@@ -6,7 +6,8 @@ class Configuration
                 :email,
                 :password,
                 :environment_id,
-                :multi_user
+                :multi_user,
+                :profiles
 
   def initialize
     self.logger = nil
@@ -17,5 +18,6 @@ class Configuration
     self.environment_id = nil
 
     self.multi_user = false
+    self.profiles = nil
   end
 end

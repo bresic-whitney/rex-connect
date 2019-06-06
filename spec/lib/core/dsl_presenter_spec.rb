@@ -274,6 +274,31 @@ RSpec.describe BwRex::Core::DSL::Presenter do
         end
       end
 
+      context 'with helper' do
+        before do
+        end
+
+        it 'manipulates the returning field' do
+          response = { 'code-1' => '1235', 'code-2' => '9874', 'code-3' => '8522' }
+          subject.field(:uuid, as: 'code-1', helper: 'manipulate')
+
+          allow(host).to receive(:manipulate).with('1235', response).and_return(%w[1 2 3 5 5 3 2 1])
+
+          expect(subject.render(response)).to eq(instance)
+          expect(instance).to have_received(:uuid=).with(%w[1 2 3 5 5 3 2 1])
+        end
+
+        it 'uses the whole object' do
+          response = { 'code-1' => '1235', 'code-2' => '9874', 'code-3' => '8522' }
+          subject.field(:uuid, as: 'code-1', helper: 'only_keys')
+
+          allow(host).to receive(:only_keys).with('1235', response).and_return(['code-1', 'code-2', 'code-3'])
+
+          expect(subject.render(response)).to eq(instance)
+          expect(instance).to have_received(:uuid=).with(['code-1', 'code-2', 'code-3'])
+        end
+      end
+
       context 'with multiple fields with same name' do
         it 'registers all the fields but only 1 attribute' do
           subject.field(:name, as: 'full_name')
@@ -284,6 +309,18 @@ RSpec.describe BwRex::Core::DSL::Presenter do
           expect(subject.attributes.size).to eq(1)
         end
       end
+    end
+  end
+
+  describe '#field?' do
+    let(:field) { :first_name }
+
+    it { expect(subject.field?(field)).to be_falsey }
+
+    context 'when alredy configured' do
+      before { subject.field(field) }
+
+      it { expect(subject.field?(field)).to be_truthy }
     end
   end
 end

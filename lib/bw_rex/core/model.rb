@@ -8,8 +8,9 @@ module BwRex
       module ModelInstanceMethods
         def initialize(hash = nil)
           if hash.is_a?(Hash)
-            self.token = hash[:token] if hash.key?(:token)
-            self.id = hash[:id] if hash.key?(:id)
+            %i[id token profile].each do |k|
+              send("#{k}=", hash[k]) if hash.key?(k)
+            end
           end
 
           super
@@ -22,7 +23,7 @@ module BwRex
         base.include(ModelInstanceMethods)
       end
 
-      attr_accessor :token, :id
+      attr_accessor :token, :id, :profile
 
       def request(query)
         response = nil

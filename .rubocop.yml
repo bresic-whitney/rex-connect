@@ -16,6 +16,8 @@ RSpec/MessageChain:
   Enabled: false
 RSpec/ExampleLength:
   Max: 10
+RSpec/PredicateMatcher:
+  Enabled: false
 Metrics/AbcSize:
   Max: 25
 Metrics/MethodLength:
