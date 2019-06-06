@@ -51,6 +51,10 @@ module BwRex
           @options[:debug] == true
         end
 
+        def profile
+          @options[:profile]
+        end
+
         protected
 
         def args(instance)

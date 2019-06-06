@@ -275,9 +275,6 @@ RSpec.describe BwRex::Core::DSL::Presenter do
       end
 
       context 'with helper' do
-        before do
-        end
-
         it 'manipulates the returning field' do
           response = { 'code-1' => '1235', 'code-2' => '9874', 'code-3' => '8522' }
           subject.field(:uuid, as: 'code-1', helper: 'manipulate')

@@ -110,12 +110,14 @@ module BwRex
             end
           end
 
-          options = { profile: instance.profile }
+          options = { profile: instance.profile || action.profile }
           render(output, options, &transformer)
         end
 
         def render(response, options = {}, &transformer)
           profile = options[:profile] || :default
+          raise "Profile '#{profile}' not configured." unless @presenters[profile]
+
           block = transformer || @presenters[profile].method(:render)
 
           if response.is_a?(Array)

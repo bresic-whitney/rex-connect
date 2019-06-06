@@ -126,4 +126,18 @@ RSpec.describe BwRex::Core::DSL::BaseProxy do
       it { is_expected.to be_falsey }
     end
   end
+
+  describe '#profile' do
+    subject { described_class.new('my_action', options).profile }
+
+    let(:options) { { model: 'my_model', profile: :some_profile } }
+
+    it { is_expected.to eq(:some_profile) }
+
+    context 'when not existent' do
+      let(:options) { { model: 'my_model' } }
+
+      it { is_expected.to be_nil }
+    end
+  end
 end

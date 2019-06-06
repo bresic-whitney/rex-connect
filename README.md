@@ -257,6 +257,8 @@ BwRex::AccountUsers.read(id: 520)
 
 However it is possible to use an alias: `as: 'someOtherRexFunction'`
 
+It is possible to set the options 'profile' to instruct the method to use a specific profile for the rendering
+
 There are a few predefined actions that would change slightly the query and the response:
 * `:create`: Wraps the fields inside a `data` node and allow the option `return_id: true`
 * `:update`: Wraps the fields inside a `data` node and allow the option `return_id: true`
